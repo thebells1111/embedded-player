@@ -181,7 +181,7 @@
     <audio bind:this={player}></audio>
 
     <div class="card-wrapper">
-      <FlippableCard {rotationDegree} {flipCard} hideFlipButton={true}>
+      <FlippableCard>
         <div class="flippable front" slot="front">
           <Player
             {feed}
@@ -194,7 +194,7 @@
           />
         </div>
 
-        <div class="flippable back" slot="back">
+        <div class="flippable back" slot="y-back">
           <SongList
             {feed}
             {controls}
