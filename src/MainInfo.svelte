@@ -50,25 +50,33 @@
       <h3 part="now-playing-title" class="now-playing-title"></h3>
     {/if}
 
-    <div part="progress-container" class="progress-container">
-      <div part="time-display" class="time-display">
-        <span part="current-time">{formatTime(currentTime)}</span>
-        <span part="duration">{formatTime(duration)}</span>
+    <div part="main-info-progress-container" class="progress-container">
+      <div part="main-info-time-display" class="time-display">
+        <span part="main-info-current-time">{formatTime(currentTime)}</span>
+        <span part="main-info-duration">{formatTime(duration)}</span>
       </div>
       <AudioProgressBar bind:player />
     </div>
 
-    <button part="boost-button" class="boost-button" on:click={flipCardX}>
-      Boost
+    <button
+      part="main-info-boost-button"
+      class="boost-button"
+      on:click={flipCardX}
+    >
+      <span class="material-icons outline" part="main-info-boost-button-icon">
+        rocket_launch
+      </span>
     </button>
     <!-- Main playback controls -->
     <div part="player-controls" class="player-controls">
       <button
-        part="prev-button"
+        part="main-info-prev-button"
         class="control-button"
         on:click={controls.playPrevious}
       >
-        <span class="material-icons" part="prev-icon">skip_previous</span>
+        <span class="material-icons" part="main-info-prev-button-icon"
+          >skip_previous</span
+        >
       </button>
 
       <button
@@ -76,42 +84,34 @@
         class="control-button play-button"
         on:click={controls.togglePlayPause}
       >
-        <span class="material-icons" part="play-icon">
+        <span class="material-icons" part="main-info-play-button-icon">
           {isPaused ? "play_arrow" : "pause"}
         </span>
       </button>
 
       <button
-        part="next-button"
+        part="main-info-next-button"
         class="control-button"
         on:click={controls.playNext}
       >
-        <span class="material-icons" part="next-icon">skip_next</span>
+        <span class="material-icons" part="main-info-next-button-icon"
+          >skip_next</span
+        >
       </button>
     </div>
-    <button part="song-button" class="song-button" on:click={flipCardY}>
-      Songs
+    <button
+      part="main-info-song-button"
+      class="song-button"
+      on:click={flipCardY}
+    >
+      <span class="material-icons" part="main-info-song-button-icon">
+        queue_music
+      </span>
     </button>
   </div>
 {/if}
 
 <style>
-  /* Material icons styling */
-  .material-icons {
-    font-family: "Material Icons";
-    font-size: var(--icon-size, 24px);
-    color: var(--icon-color, #2980b9);
-    font-weight: normal;
-    font-style: normal;
-    display: inline-block;
-    line-height: 1;
-    text-transform: none;
-    letter-spacing: normal;
-    word-wrap: normal;
-    white-space: nowrap;
-    direction: ltr;
-  }
-
   .artwork {
     width: 150px;
     height: 150px;
@@ -139,12 +139,16 @@
 
   .progress-container {
     padding: 0 8px;
+    display: flex;
+    flex-direction: column;
+    width: calc(100% - 16px);
     position: relative;
   }
 
   .time-display {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     font-size: 0.8rem;
     color: #666;
     position: absolute;
@@ -158,7 +162,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 0.5rem;
+    padding-bottom: 4px;
   }
 
   .control-button {
@@ -178,21 +182,11 @@
     background-color: rgba(0, 0, 0, 0.05);
   }
 
-  .song-button {
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-  }
-
-  .song-button:hover {
-    color: blue;
-  }
-
   .container {
     width: 100%;
     height: 100%;
     display: grid;
-    grid-template-columns: 50px 1fr 50px;
+    grid-template-columns: 44px 1fr 44px;
     grid-template-rows: 1fr 1fr 150px 1fr 1fr 1fr;
     gap: 0px 0px;
     grid-auto-flow: row;

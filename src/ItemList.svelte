@@ -9,7 +9,7 @@
   export let flipCardY = () => {};
 </script>
 
-<ul part="item-list" class="item-list">
+<ul part="item-list">
   {#each feed?.channel?.item as item, index}
     <li part="item-card" class="item-card" class:active={index === activeIndex}>
       <button
@@ -36,31 +36,11 @@
     </li>
   {/each}
 </ul>
-<button
-  part="goto-player-button"
-  class="goto-player-button"
-  on:click={flipCardY}
->
-  Player
+<button part="item-list-goto-player-button" on:click={flipCardY}>
+  <span part="item-list-goto-player-button-icon"> smart_display </span>
 </button>
 
 <style>
-  /* Material icons styling */
-  .material-icons {
-    font-family: "Material Icons";
-    font-size: var(--icon-size, 24px);
-    color: var(--icon-color, #2980b9);
-    font-weight: normal;
-    font-style: normal;
-    display: inline-block;
-    line-height: 1;
-    text-transform: none;
-    letter-spacing: normal;
-    word-wrap: normal;
-    white-space: nowrap;
-    direction: ltr;
-  }
-
   .control-button {
     background: none;
     border: none;
@@ -74,16 +54,6 @@
 
   .control-button:hover {
     background-color: rgba(0, 0, 0, 0.05);
-  }
-
-  .item-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    height: 100%;
-    position: relative;
-    top: 0;
-    overflow-y: auto;
   }
 
   .item-card {
@@ -109,11 +79,5 @@
     margin: 0;
     font-size: 0.8rem;
     color: #666;
-  }
-
-  .goto-player-button {
-    position: absolute;
-    bottom: 8px;
-    right: 8px;
   }
 </style>

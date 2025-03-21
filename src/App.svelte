@@ -3,8 +3,10 @@
   import MainInfo from "./MainInfo.svelte";
   import ItemList from "./ItemList.svelte";
   import Player from "./Player.svelte";
+  import Boost from "./Boost.svelte";
   import { onMount } from "svelte";
   import xmlToJson from "./functions/xmlToJson";
+  import detectWebLNProvider from "./functions/detectWebLNProvider";
 
   // Reference to the FlipCard component instance
   let flipCardComponent;
@@ -134,6 +136,16 @@
         console.error("Error loading feed:", error);
       } finally {
         isLoading = false;
+        if (typeof window.webln !== "undefined") {
+          console.log("WebLN is available!");
+        }
+        // let wallet = await detectWebLNProvider();
+        // await window.webln.enable();
+        // let stuff = await window.webln.sendPayment(
+        //   "lnbc100n1pnamvqzdq5g9kxy7fqd9h8vmmfvdjsnp4qddd9j25ufjqqjvxmgkefx0pwvh9za0pmnhjg57fy8rvmnp4xm5aspp5hvm43enmujykphkuv64nqrvxzxrqyktq2ew3t8qsf68dxuj2hn6ssp5g84nvczzc0kgudytff048nt9ghr3dgg7mf2nfdk7074tjqskgs0q9qyysgqcqpcxqyz5vqrrmgkt67nkue0ddc7wgxjchmueuy5tgltul4twjqnrdk6rfv90t8fkv8lqa3kqeztwdz5yh64g2r6vgqq5uvwaaemnuffdemh4dl9lqpkr825f"
+        // );
+        // console.log(stuff);
+        // console.log(wallet);
       }
     }
   });
@@ -155,8 +167,9 @@
 </script>
 
 <svelte:head>
+  <!-- Import both regular and outlined variants -->
   <link
-    href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined"
     rel="stylesheet"
   />
   <title>{feed?.channel?.title || "Podcast Player"}</title>
@@ -168,7 +181,7 @@
     <p part="loading-text">Loading podcast...</p>
   </div>
 {:else if feed}
-  <main>
+  <main part="app">
     <!-- Hidden audio element -->
     <Player
       bind:player
@@ -208,7 +221,7 @@
         </div>
 
         <div class="flippable back" slot="x-back">
-          Hello Sexy<button on:click={flipCardX}>Flip</button>
+          <Boost {feed} {activeItem} {player} {flipCardX} />
         </div>
       </FlippableCard>
     </div>

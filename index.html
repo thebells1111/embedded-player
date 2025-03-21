@@ -12,16 +12,124 @@
         overflow: hidden;
       }
 
+      embedded-player::part(boost-container) > .material-icons,
+      embedded-player::part(app) * .material-icons {
+        font-family: "Material Icons";
+        font-size: var(--icon-size, 24px);
+        color: var(--icon-color, black);
+        font-weight: normal;
+        font-style: normal;
+        display: inline-block;
+        line-height: 1;
+        text-transform: none;
+        letter-spacing: normal;
+        word-wrap: normal;
+        white-space: nowrap;
+        direction: ltr;
+      }
+
+      embedded-player::part(app) .material-icons.outlined {
+        font-family: "Material Icons Outlined";
+      }
+
+      embedded-player::part(main-info-boost-button),
+      embedded-player::part(main-info-prev-button),
+      embedded-player::part(main-info-play-button),
+      embedded-player::part(main-info-next-button),
+      embedded-player::part(main-info-song-button),
+      embedded-player::part(boost-container-goto-player-button),
+      embedded-player::part(item-list-goto-player-button),
+      embedded-player::part(goto-player-button) {
+        color: black;
+        background: none;
+        border: none;
+        padding: 0.5rem;
+        cursor: pointer;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.2s;
+      }
+
+      embedded-player::part(boost-container-goto-player-button),
+      embedded-player::part(item-list-goto-player-button) {
+        position: absolute;
+        bottom: 8px;
+        right: 16px;
+        background-color: rgba(0, 0, 0, 0.1);
+      }
+
+      embedded-player::part(main-info-boost-button):hover,
+      embedded-player::part(main-info-prev-button):hover,
+      embedded-player::part(main-info-play-button):hover,
+      embedded-player::part(main-info-next-button):hover,
+      embedded-player::part(main-info-song-button):hover,
+      embedded-player::part(goto-player-button):hover {
+        background-color: rgba(0, 0, 0, 0.05);
+      }
+
+      embedded-player::part(boost-container-goto-player-button):hover,
+      embedded-player::part(item-list-goto-player-button):hover {
+        background-color: rgba(0, 0, 0, 0.15);
+      }
+
+      embedded-player::part(main-info-boost-button-icon),
+      embedded-player::part(main-info-prev-button-icon),
+      embedded-player::part(main-info-play-button-icon),
+      embedded-player::part(main-info-next-button-icon),
+      embedded-player::part(main-info-song-button-icon),
+      embedded-player::part(boost-container-goto-player-button-icon),
+      embedded-player::part(item-list-goto-player-button-icon),
+      embedded-player::part(goto-player-button-icon) {
+        font-family: "Material Icons";
+        font-size: var(--icon-size, 24px);
+        color: var(--icon-color, black);
+        font-weight: normal;
+        font-style: normal;
+        display: inline-block;
+        line-height: 1;
+        text-transform: none;
+        letter-spacing: normal;
+        word-wrap: normal;
+        white-space: nowrap;
+        direction: ltr;
+      }
+
+      embedded-player::part(main-info-boost-button-icon),
+      embedded-player::part(boost-container-goto-player-button-icon),
+      embedded-player::part(item-list-goto-player-button-icon) {
+        font-family: "Material Icons Outlined";
+      }
+
+      /* Main Info */
       embedded-player::part(channel-title) {
-        color: red;
+        color: black;
       }
 
-      embedded-player::part(song-button) {
-        color: red;
+      /* Item List */
+      embedded-player::part(item-list) {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        position: relative;
+        top: 0;
+        overflow-y: auto;
       }
 
-      embedded-player::part(song-button):hover {
-        color: blue;
+      /* Boost Page */
+      embedded-player::part(boost-container) {
+        position: relative;
+        height: 100%;
+        width: 100%;
+      }
+      embedded-player::part(boost-container-goto-player-button) {
+        position: absolute;
+        bottom: 8px;
+        right: initial;
+        left: 8px;
+        background-color: rgba(0, 0, 0, 0.1);
       }
     </style>
   </head>
