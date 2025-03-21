@@ -1,18 +1,20 @@
 <script>
   import FlippableCard from "./FlippableCard.svelte";
+  import MainInfo from "./MainInfo.svelte";
+  import ItemList from "./ItemList.svelte";
   import Player from "./Player.svelte";
-  import SongList from "./SongList.svelte";
   import { onMount } from "svelte";
   import xmlToJson from "./functions/xmlToJson";
 
+  // Reference to the FlipCard component instance
+  let flipCardComponent;
   // Props with defaults
   export let feedUrl = "";
-  export let skipTime = 30; // Skip time in seconds
 
   // State variables
   let feed;
   let player;
-  let activeSong;
+  let activeItem;
   let activeIndex;
   let isPaused = true;
   let currentTime = 0;
@@ -23,10 +25,10 @@
   const controls = {
     // Toggle play/pause
     togglePlayPause() {
-      if (!player || !activeSong) {
+      if (!player || !activeItem) {
         // If no song is active, play the first one
         if (feed?.channel?.item && feed.channel.item.length > 0) {
-          this.playAudio(feed.channel.item[0], 0);
+          controls.playAudio(feed.channel.item[0], 0);
         }
         return;
       }
@@ -36,16 +38,17 @@
       } else {
         player.pause();
       }
+      isPaused = !isPaused;
     },
 
     // Play specific track
     playAudio(item, index) {
       if (activeIndex === index) {
-        this.togglePlayPause();
+        controls.togglePlayPause();
       } else {
         if (player) player.pause();
 
-        activeSong = item;
+        activeItem = item;
         activeIndex = index;
         const audioSrc = item?.enclosure?.["@_url"];
 
@@ -67,20 +70,10 @@
       }
     },
 
-    // Skip forward/backward
-    skipAudio(seconds) {
-      if (player && !isNaN(player.duration)) {
-        player.currentTime = Math.min(
-          Math.max(0, player.currentTime + seconds),
-          player.duration
-        );
-      }
-    },
-
     // Play next track
     playNext() {
       if (feed?.channel?.item && activeIndex < feed.channel.item.length - 1) {
-        this.playAudio(feed.channel.item[activeIndex + 1], activeIndex + 1);
+        controls.playAudio(feed.channel.item[activeIndex + 1], activeIndex + 1);
       }
     },
 
@@ -92,17 +85,8 @@
       }
       // Otherwise go to previous track
       else if (feed?.channel?.item && activeIndex > 0) {
-        this.playAudio(feed.channel.item[activeIndex - 1], activeIndex - 1);
+        controls.playAudio(feed.channel.item[activeIndex - 1], activeIndex - 1);
       }
-    },
-
-    // Handle progress bar clicks
-    handleProgressClick(e) {
-      if (!player || isNaN(duration) || duration === 0) return;
-
-      const rect = e.currentTarget.getBoundingClientRect();
-      const pos = (e.clientX - rect.left) / rect.width;
-      player.currentTime = pos * duration;
     },
   };
 
@@ -154,11 +138,20 @@
     }
   });
 
-  let rotationDegree = 0;
-  let flipCard = () => {
-    // Always increment by 180 degrees for consistent direction
-    rotationDegree += 180;
-  };
+  // Create functions to flip the card from the parent
+  function flipCardY() {
+    // Check if the card is currently flipping
+    if (!flipCardComponent.isCardFlipping()) {
+      flipCardComponent.flipCard("y");
+    }
+  }
+
+  function flipCardX() {
+    // Check if the card is currently flipping
+    if (!flipCardComponent.isCardFlipping()) {
+      flipCardComponent.flipCard("x");
+    }
+  }
 </script>
 
 <svelte:head>
@@ -175,35 +168,47 @@
     <p part="loading-text">Loading podcast...</p>
   </div>
 {:else if feed}
-  hi
   <main>
     <!-- Hidden audio element -->
-    <audio bind:this={player}></audio>
+    <Player
+      bind:player
+      bind:currentTime
+      bind:duration
+      bind:isPaused
+      {feed}
+      {activeItem}
+    />
 
     <div class="card-wrapper">
-      <FlippableCard>
+      <FlippableCard bind:this={flipCardComponent} hideFlipButton={true}>
         <div class="flippable front" slot="front">
-          <Player
+          <MainInfo
+            bind:isPaused
+            bind:player
             {feed}
-            {activeSong}
+            {activeItem}
             {duration}
             {currentTime}
             {controls}
-            {skipTime}
-            {flipCard}
+            {flipCardY}
+            {flipCardX}
           />
         </div>
 
         <div class="flippable back" slot="y-back">
-          <SongList
+          <ItemList
             {feed}
             {controls}
             {isPaused}
             bind:activeIndex
-            bind:activeSong
-            {flipCard}
+            bind:activeItem
+            {flipCardY}
             showPubDate={false}
           />
+        </div>
+
+        <div class="flippable back" slot="x-back">
+          Hello Sexy<button on:click={flipCardX}>Flip</button>
         </div>
       </FlippableCard>
     </div>

@@ -4,12 +4,6 @@
   export let hideFlipButton = false;
   export let animationDuration = 600; // Customizable animation duration in ms
 
-  let flipAxis = "y";
-  let flipCardInner;
-  let isFlipping = false; // Track whether a flip animation is in progress
-  let skipTransition = false; // Flag to control transition skipping
-
-  // Function to ensure we don't start a new flip while one is in progress
   export let flipCard = (axis) => {
     // Don't allow new flips while one is in progress
     if (isFlipping) return;
@@ -68,6 +62,12 @@
   // Expose current state for external components
   export let isCardFlipping = () => isFlipping;
 
+  let flipAxis = "y";
+  let isFlipping = false; // Track whether a flip animation is in progress
+  let skipTransition = false; // Flag to control transition skipping
+
+  // Function to ensure we don't start a new flip while one is in progress
+
   // Compute the transition style based on the skipTransition flag
   $: transitionStyle = skipTransition
     ? "transform 0s"
@@ -77,7 +77,6 @@
 <div class="flip-card-container">
   <div class="flip-card" class:flipping={isFlipping}>
     <div
-      bind:this={flipCardInner}
       class="flip-card-inner"
       style="transform: rotateY({rotationDegreeY}deg) rotateX({rotationDegreeX}deg); transition: {transitionStyle}"
     >
@@ -143,7 +142,6 @@
   .flip-card-container {
     width: 100%;
     height: 100%;
-    min-height: 300px;
   }
 
   .flip-card {
@@ -179,7 +177,6 @@
     justify-content: space-between;
     box-sizing: border-box;
     border-radius: 10px;
-    padding: 20px;
   }
 
   .flip-card-front {

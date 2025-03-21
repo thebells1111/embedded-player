@@ -4,36 +4,45 @@
   export let controls;
   export let isPaused;
   export let showPubDate;
+  export let activeItem;
 
-  export let flipCard = () => {};
+  export let flipCardY = () => {};
 </script>
 
 <ul part="item-list" class="item-list">
   {#each feed?.channel?.item as item, index}
     <li part="item-card" class="item-card" class:active={index === activeIndex}>
-      <div part="item-info" class="item-info">
-        <h4 part="item-title" class="item-title">{item.title}</h4>
-        {#if showPubDate}
-          <p part="item-date" class="item-date">
-            {new Date(item.pubDate).toLocaleDateString()}
-          </p>
-        {/if}
-      </div>
       <button
         part="item-play-button"
         class="item-play-button control-button"
         on:click={() => {
           controls.playAudio(item, index);
-          flipCard();
+          flipCardY();
         }}
       >
         <span class="material-icons" part="item-play-icon">
           {!isPaused && index === activeIndex ? "pause" : "play_arrow"}
         </span>
+
+        <div part="item-info" class="item-info">
+          <h4 part="item-title" class="item-title">{item.title}</h4>
+          {#if showPubDate}
+            <p part="item-date" class="item-date">
+              {new Date(item.pubDate).toLocaleDateString()}
+            </p>
+          {/if}
+        </div>
       </button>
     </li>
   {/each}
 </ul>
+<button
+  part="goto-player-button"
+  class="goto-player-button"
+  on:click={flipCardY}
+>
+  Player
+</button>
 
 <style>
   /* Material icons styling */
@@ -55,13 +64,12 @@
   .control-button {
     background: none;
     border: none;
-    padding: 0.5rem;
     cursor: pointer;
-    border-radius: 50%;
     display: flex;
     align-items: center;
-    justify-content: center;
     transition: background-color 0.2s;
+    width: 100%;
+    height: 100%;
   }
 
   .control-button:hover {
@@ -72,16 +80,14 @@
     list-style: none;
     padding: 0;
     margin: 0;
-    max-height: 400px;
+    height: 100%;
+    position: relative;
+    top: 0;
     overflow-y: auto;
   }
 
   .item-card {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.75rem 0;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #ababab;
   }
 
   .item-card.active {
@@ -94,7 +100,6 @@
   }
 
   .item-title {
-    font-size: 1rem;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
@@ -106,7 +111,9 @@
     color: #666;
   }
 
-  .item-play-button {
-    flex-shrink: 0;
+  .goto-player-button {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
   }
 </style>
