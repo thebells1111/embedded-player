@@ -1,4 +1,5 @@
 <script>
+  import detectWebLNProvider from "./functions/detectWebLNProvider";
   import AudioProgressBar from "./AudioProgressBar.svelte";
   export let player;
   export let feed;
@@ -7,11 +8,13 @@
   export let duration;
   export let controls;
   export let isPaused;
+  export let showWallet;
+  export let wallet;
   export let flipCardX = () => {};
   export let flipCardY = () => {};
 
   // Reactive statements
-  $: progress = duration ? (currentTime / duration) * 100 : 0;
+
   $: imgSrc =
     activeItem?.image?.["@_href"] ||
     activeItem?.["itunes:image"]?.["@_src"] ||
@@ -58,15 +61,21 @@
       <AudioProgressBar bind:player />
     </div>
 
-    <button
-      part="main-info-boost-button"
-      class="boost-button"
-      on:click={flipCardX}
-    >
-      <span class="material-icons outline" part="main-info-boost-button-icon">
-        rocket_launch
-      </span>
-    </button>
+    {#if showWallet}
+      <button
+        part="main-info-boost-button"
+        class="boost-button"
+        on:click={async () => {
+          flipCardX();
+          await window.webln.enable();
+          wallet = await detectWebLNProvider();
+        }}
+      >
+        <span class="material-icons outline" part="main-info-boost-button-icon">
+          rocket_launch
+        </span>
+      </button>
+    {/if}
     <!-- Main playback controls -->
     <div part="player-controls" class="player-controls">
       <button
