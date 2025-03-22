@@ -6,7 +6,6 @@
   import Boost from "./Boost.svelte";
   import { onMount } from "svelte";
   import xmlToJson from "./functions/xmlToJson";
-  import detectWebLNProvider from "./functions/detectWebLNProvider";
 
   // Reference to the FlipCard component instance
   let flipCardComponent;
@@ -22,6 +21,7 @@
   let currentTime = 0;
   let duration = 0;
   let isLoading = true;
+  let showBoost = false;
 
   // Create a controls object to hold all player control functions
   const controls = {
@@ -137,15 +137,8 @@
       } finally {
         isLoading = false;
         if (typeof window.webln !== "undefined") {
-          console.log("WebLN is available!");
+          showBoost = true;
         }
-        // let wallet = await detectWebLNProvider();
-        // await window.webln.enable();
-        // let stuff = await window.webln.sendPayment(
-        //   "lnbc100n1pnamvqzdq5g9kxy7fqd9h8vmmfvdjsnp4qddd9j25ufjqqjvxmgkefx0pwvh9za0pmnhjg57fy8rvmnp4xm5aspp5hvm43enmujykphkuv64nqrvxzxrqyktq2ew3t8qsf68dxuj2hn6ssp5g84nvczzc0kgudytff048nt9ghr3dgg7mf2nfdk7074tjqskgs0q9qyysgqcqpcxqyz5vqrrmgkt67nkue0ddc7wgxjchmueuy5tgltul4twjqnrdk6rfv90t8fkv8lqa3kqeztwdz5yh64g2r6vgqq5uvwaaemnuffdemh4dl9lqpkr825f"
-        // );
-        // console.log(stuff);
-        // console.log(wallet);
       }
     }
   });
@@ -205,6 +198,7 @@
             {controls}
             {flipCardY}
             {flipCardX}
+            {showBoost}
           />
         </div>
 
@@ -235,15 +229,13 @@
 
 <style>
   main {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
+    width: 100%;
+    height: 100%;
   }
 
   .card-wrapper {
-    width: 400px;
-    height: 300px;
-    margin: 40px auto;
+    width: 100%;
+    height: 100%;
   }
   .flippable {
     height: 100%;
