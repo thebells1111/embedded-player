@@ -114,17 +114,17 @@
   <div
     bind:this={progress}
     class="tracker"
-    style="--tracker-color: {trackerColor}; --tracker-height: {`${trackerHeight}px`}"
+    style="--tracker-height: {`${trackerHeight}px`}"
   >
     <div
       class="elapsed"
-      style="--elapsed-color: {elapsedColor}; --tracker-height: {`${trackerHeight}px`};
+      style="--tracker-height: {`${trackerHeight}px`};
       --position: {`${percentage}%`}"
     />
     <div
       bind:this={handle}
       class="handle"
-      style="--handle-color: {handleColor}; --handle-height: {`${handleHeight}px`};
+      style=" --handle-height: {`${handleHeight}px`};
       --handle-position: {`${percentage}%`}; --handle-offset: {`${
         trackerHeight + (handleHeight - trackerHeight) / 2
       }px`}"
@@ -147,28 +147,25 @@
 
   .tracker {
     width: 100%;
-    height: var(--audio-progress-bar-tracker-height);
-    border-radius: var(--audio-progress-bar-tracker-height);
+    height: var(--tracker-height);
+    border-radius: var(--tracker-height);
     background-color: var(--audio-progress-bar-tracker-color);
   }
 
   .elapsed {
     height: 100%;
-    width: var(--audio-progress-bar-position);
-    border-radius: var(--audio-progress-bar-tracker-height);
+    width: var(--position);
+    border-radius: var(--height);
     background-color: var(--audio-progress-bar-elapsed-color);
   }
   .handle {
-    height: var(--audio-progress-bar-handle-height);
-    width: var(--audio-progress-bar-handle-height);
-    border-radius: var(--audio-progress-bar-handle-height);
+    height: var(--handle-height);
+    width: var(--handle-height);
+    border-radius: var(--handle-height);
     background-color: var(--audio-progress-bar-handle-color);
     position: relative;
-    left: calc(
-      var(--audio-progress-bar-handle-position) -
-        var(--audio-progress-bar-handle-height) / 2
-    );
-    bottom: var(--audio-progress-bar-handle-offset);
+    left: calc(var(--handle-position) - var(--handle-height) / 2);
+    bottom: var(--handle-offset);
     /* transition: all 0.1s ease;
     transition-property: height width; */
   }

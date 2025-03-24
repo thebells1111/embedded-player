@@ -4,11 +4,6 @@
     --audio-progress-bar-tracker-color: #ddd;
   --audio-progress-bar-elapsed-color: #333;
   --audio-progress-bar-handle-color: #333;
-  --audio-progress-bar-tracker-height: 2px;
-  --audio-progress-bar-handle-height: 8px;
-  --audio-progress-bar-position: 0%;
-  --audio-progress-bar-handle-position: 0%;
-  --audio-progress-bar-handle-offset: 5px;
   }
 /* button style */
 embedded-player::part(main-info-boost-button),
