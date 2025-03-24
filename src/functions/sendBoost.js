@@ -2,7 +2,7 @@ import clone from "just-clone";
 
 export default async function sendBoost({
   satAmount,
-  boostagram,
+  message,
   wallet,
   player,
   channel,
@@ -50,7 +50,7 @@ export default async function sendBoost({
 
   for (const dest of feesDestinations) {
     let feeRecord = filterEmptyKeys(
-      getBaseRecord({ channel, activeItem, satAmount, boostagram })
+      getBaseRecord({ channel, activeItem, satAmount, message })
     );
 
     let amount = Math.round((dest["@_split"] / 100) * satAmount);
@@ -81,7 +81,7 @@ export default async function sendBoost({
 
   for (const dest of splitsDestinations) {
     let record = filterEmptyKeys(
-      getBaseRecord({ channel, activeItem, satAmount, boostagram })
+      getBaseRecord({ channel, activeItem, satAmount, message })
     );
     let amount = Math.round((dest["@_split"] / 100) * runningTotal);
     record.name = dest["@_name"];
@@ -137,7 +137,7 @@ const getBaseRecord = ({
   channel,
   activeItem,
   satAmount,
-  boostagram,
+  message,
   ts,
   sender_name,
 }) => {
@@ -155,7 +155,7 @@ const getBaseRecord = ({
     value_msat: 0,
     value_msat_total: satAmount * 1000,
     name: undefined,
-    message: boostagram,
+    message,
     sender_name,
   };
   return record;

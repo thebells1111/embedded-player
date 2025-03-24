@@ -6,6 +6,7 @@
   import Boost from "./Boost.svelte";
   import { onMount } from "svelte";
   import xmlToJson from "./functions/xmlToJson";
+  import "../player.css";
 
   // Reference to the FlipCard component instance
   let flipCardComponent;
@@ -22,6 +23,7 @@
   let duration = 0;
   let isLoading = true;
   let showBoost = false;
+  let wallet;
 
   // Create a controls object to hold all player control functions
   const controls = {
@@ -215,7 +217,7 @@
         </div>
 
         <div class="flippable back" slot="x-back">
-          <Boost {feed} {activeItem} {player} {flipCardX} {wallet} />
+          <Boost {feed} {activeItem} {player} {flipCardX} bind:wallet />
         </div>
       </FlippableCard>
     </div>

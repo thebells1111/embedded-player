@@ -188,7 +188,7 @@
     width: 100%;
     height: 100%;
     display: grid;
-    grid-template-columns: 44px 1fr 44px;
+    grid-template-columns: 50px 1fr 50px;
     grid-template-rows: 1fr 1fr 150px 1fr 1fr 1fr;
     gap: 0px 0px;
     grid-auto-flow: row;
