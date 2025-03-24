@@ -21,8 +21,7 @@
   let currentTime = 0;
   let duration = 0;
   let isLoading = true;
-  let showWallet = false;
-  let wallet;
+  let showBoost = false;
 
   // Create a controls object to hold all player control functions
   const controls = {
@@ -138,7 +137,7 @@
       } finally {
         isLoading = false;
         if (typeof window.webln !== "undefined") {
-          showWallet = true;
+          showBoost = true;
         }
       }
     }
@@ -199,8 +198,7 @@
             {controls}
             {flipCardY}
             {flipCardX}
-            bind:wallet
-            {showWallet}
+            {showBoost}
           />
         </div>
 
@@ -231,15 +229,13 @@
 
 <style>
   main {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
+    width: 100%;
+    height: 100%;
   }
 
   .card-wrapper {
-    width: 400px;
-    height: 300px;
-    margin: 40px auto;
+    width: 100%;
+    height: 100%;
   }
   .flippable {
     height: 100%;

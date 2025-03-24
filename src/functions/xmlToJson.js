@@ -11,7 +11,7 @@ function xmlToJson(xml, options = {}) {
     textNodeName: "#text",
     cdataNodeName: "#cdata",
     ignoreAttributes: false,
-    ignoreNamespaces: true,
+    ignoreNamespaces: false,
     parseNumbers: true,
     parseBooleans: true,
     trimText: true,

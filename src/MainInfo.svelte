@@ -8,18 +8,15 @@
   export let duration;
   export let controls;
   export let isPaused;
-  export let showWallet;
-  export let wallet;
+  export let showBoost;
   export let flipCardX = () => {};
   export let flipCardY = () => {};
 
-  // Reactive statements
-
   $: imgSrc =
-    activeItem?.image?.["@_href"] ||
-    activeItem?.["itunes:image"]?.["@_src"] ||
-    feed?.channel?.image?.["@_href"] ||
-    feed?.channel?.["itunes:image"]?.["@_src"];
+    activeItem?.image?.["@_src"] ||
+    activeItem?.["itunes:image"]?.["@_href"] ||
+    feed?.channel?.image?.["@_src"] ||
+    feed?.channel?.["itunes:image"]?.["@_href"];
 
   function formatTime(seconds) {
     if (isNaN(seconds) || seconds === Infinity) return "00:00";
@@ -61,15 +58,11 @@
       <AudioProgressBar bind:player />
     </div>
 
-    {#if showWallet}
+    {#if showBoost}
       <button
         part="main-info-boost-button"
         class="boost-button"
-        on:click={async () => {
-          flipCardX();
-          await window.webln.enable();
-          wallet = await detectWebLNProvider();
-        }}
+        on:click={flipCardX}
       >
         <span class="material-icons outline" part="main-info-boost-button-icon">
           rocket_launch
