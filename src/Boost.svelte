@@ -7,8 +7,6 @@
   export let wallet;
   export let flipCardX = () => {};
 
-  let wallet;
-
   let satAmount = 100;
   let boostagram = "this is a test";
 
