@@ -1,6 +1,14 @@
 :root {
     --boost-button-color: hsl(350, 100%, 88%); 
     --boost-button-color-hover: hsl(350, 93%, 77%);
+    --audio-progress-bar-tracker-color: #ddd;
+  --audio-progress-bar-elapsed-color: #333;
+  --audio-progress-bar-handle-color: #333;
+  --audio-progress-bar-tracker-height: 2px;
+  --audio-progress-bar-handle-height: 8px;
+  --audio-progress-bar-position: 0%;
+  --audio-progress-bar-handle-position: 0%;
+  --audio-progress-bar-handle-offset: 5px;
   }
 /* button style */
 embedded-player::part(main-info-boost-button),
@@ -94,14 +102,179 @@ embedded-player::part(boost-container-boost-button-icon),
 embedded-player::part(item-list-goto-player-button-icon) {
   font-family: "Material Icons Outlined";
 }
-
+/* *************************************************** */
 /* Main Info */
-embedded-player::part(channel-title) {
-  color: black;
+/* *************************************************** */
+
+
+/* Main container */
+embedded-player::part(main-info-container) {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 50px 1fr 50px;
+  grid-template-rows: 1fr 1fr 150px 1fr 1fr 1fr;
+  gap: 0px 0px;
+  grid-auto-flow: row;
+  grid-template-areas:
+    "channel-author channel-author channel-author"
+    "channel-title channel-title channel-title"
+    "artwork artwork artwork"
+    "now-playing-title now-playing-title now-playing-title"
+    "progress-container progress-container progress-container"
+    "boost-button player-controls song-button";
 }
 
+/* Artwork */
+embedded-player::part(main-info-artwork) {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  grid-area: artwork;
+  margin: 0 auto;
+}
+
+/* Channel title */
+embedded-player::part(main-info-channel-title) {
+  margin: 0;
+  grid-area: channel-title;
+}
+
+/* Channel author */
+embedded-player::part(main-info-channel-author) {
+  margin: 0;
+  color: #666;
+  grid-area: channel-author;
+}
+
+/* Now playing title */
+embedded-player::part(main-info-now-playing-title) {
+  margin: 4px 0 0 0;
+  font-size: 1rem;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  grid-area: now-playing-title;
+}
+
+/* Progress container */
+embedded-player::part(main-info-progress-container) {
+  padding: 0 8px;
+  display: flex;
+  flex-direction: column;
+  width: calc(100% - 16px);
+  position: relative;
+  grid-area: progress-container;
+}
+
+/* Time display */
+embedded-player::part(main-info-time-display) {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  color: #666;
+  position: absolute;
+  width: calc(100% - 16px);
+  bottom: 6px;
+  z-index: 3;
+  user-select: none;
+}
+
+/* Player controls */
+embedded-player::part(main-info-player-controls) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 4px;
+  grid-area: player-controls;
+}
+
+/* All control buttons (previous, play, next) */
+embedded-player::part(main-info-prev-button),
+embedded-player::part(main-info-play-button),
+embedded-player::part(main-info-next-button) {
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  cursor: pointer;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+embedded-player::part(main-info-prev-button):hover,
+embedded-player::part(main-info-play-button):hover,
+embedded-player::part(main-info-next-button):hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Song button */
+embedded-player::part(main-info-song-button) {
+  grid-area: song-button;
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  cursor: pointer;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Boost button */
+embedded-player::part(main-info-boost-button) {
+  grid-area: boost-button;
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  cursor: pointer;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Audio progress bar container - empty selector for potential future styling */
+embedded-player::part(main-info-audio-progress-bar-container) {
+}
+
+/* Current time - empty selector for potential future styling */
+embedded-player::part(main-info-current-time) {
+}
+
+/* Duration - empty selector for potential future styling */
+embedded-player::part(main-info-duration) {
+}
+
+/* Button icons - empty selectors for potential future styling */
+embedded-player::part(main-info-prev-button-icon) {
+}
+
+embedded-player::part(main-info-play-button-icon) {
+}
+
+embedded-player::part(main-info-next-button-icon) {
+}
+
+embedded-player::part(main-info-boost-button-icon) {
+}
+
+embedded-player::part(main-info-song-button-icon) {
+}
+
+
+/* ********************************************** */
 /* Item List */
-embedded-player::part(item-list) {
+
+/* ********************************************** */
+
+/* Item List Container */
+embedded-player::part(item-list-container) {
   list-style: none;
   padding: 0;
   margin: 0;
@@ -111,7 +284,81 @@ embedded-player::part(item-list) {
   overflow-y: auto;
 }
 
+/* Item Card */
+embedded-player::part(item-list-card) {
+  border-bottom: 1px solid #ababab;
+}
+
+/* Active Item Card */
+embedded-player::part(item-list-card).active {
+  background-color: #f0f7ff;
+}
+
+/* Item Play Button */
+embedded-player::part(item-list-play-button) {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.2s;
+  width: 100%;
+  height: 100%;
+}
+
+embedded-player::part(item-list-play-button):hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Item Info Container */
+embedded-player::part(item-list-info) {
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Item Title */
+embedded-player::part(item-list-title) {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+/* Item Date */
+embedded-player::part(item-list-date) {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+/* Goto Player Button */
+embedded-player::part(item-list-goto-player-button) {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+embedded-player::part(item-list-goto-player-button):hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Play Icon */
+embedded-player::part(item-list-play-icon) {
+}
+
+/* Goto Player Button Icon */
+embedded-player::part(item-list-goto-player-button-icon) {
+}
+
+
+/* ********************************************** */
 /* Boost Page */
+/* ********************************************** */
 embedded-player::part(boost-container) {
   position: relative;
   height: 100%;

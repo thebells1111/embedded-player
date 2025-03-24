@@ -147,25 +147,28 @@
 
   .tracker {
     width: 100%;
-    height: var(--tracker-height);
-    border-radius: var(--tracker-height);
-    background-color: var(--tracker-color);
+    height: var(--audio-progress-bar-tracker-height);
+    border-radius: var(--audio-progress-bar-tracker-height);
+    background-color: var(--audio-progress-bar-tracker-color);
   }
 
   .elapsed {
     height: 100%;
-    width: var(--position);
-    border-radius: var(--height);
-    background-color: var(--elapsed-color);
+    width: var(--audio-progress-bar-position);
+    border-radius: var(--audio-progress-bar-tracker-height);
+    background-color: var(--audio-progress-bar-elapsed-color);
   }
   .handle {
-    height: var(--handle-height);
-    width: var(--handle-height);
-    border-radius: var(--handle-height);
-    background-color: var(--handle-color);
+    height: var(--audio-progress-bar-handle-height);
+    width: var(--audio-progress-bar-handle-height);
+    border-radius: var(--audio-progress-bar-handle-height);
+    background-color: var(--audio-progress-bar-handle-color);
     position: relative;
-    left: calc(var(--handle-position) - var(--handle-height) / 2);
-    bottom: var(--handle-offset);
+    left: calc(
+      var(--audio-progress-bar-handle-position) -
+        var(--audio-progress-bar-handle-height) / 2
+    );
+    bottom: var(--audio-progress-bar-handle-offset);
     /* transition: all 0.1s ease;
     transition-property: height width; */
   }
