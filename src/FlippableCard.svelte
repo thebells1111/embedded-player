@@ -160,7 +160,7 @@
     height: 100%;
     text-align: center;
     transform-style: preserve-3d;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 1px 8px rgba(0, 0, 0, 0.2);
     border-radius: 10px;
     /* Transition is controlled by inline style for better timing control */
   }

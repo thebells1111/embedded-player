@@ -7,6 +7,7 @@ export default async function sendBoost({
   player,
   channel,
   activeItem,
+  sender,
 }) {
   let destinations = clone(
     activeItem?.["podcast:value"]?.["podcast:valueRecipient"] ||
@@ -50,8 +51,10 @@ export default async function sendBoost({
 
   for (const dest of feesDestinations) {
     let feeRecord = filterEmptyKeys(
-      getBaseRecord({ channel, activeItem, satAmount, message })
+      getBaseRecord({ channel, activeItem, satAmount, message, sender })
     );
+
+    console.log(feeRecord);
 
     let amount = Math.round((dest["@_split"] / 100) * satAmount);
     if (amount > 0) {
@@ -81,8 +84,10 @@ export default async function sendBoost({
 
   for (const dest of splitsDestinations) {
     let record = filterEmptyKeys(
-      getBaseRecord({ channel, activeItem, satAmount, message })
+      getBaseRecord({ channel, activeItem, satAmount, message, sender })
     );
+
+    console.log(record);
     let amount = Math.round((dest["@_split"] / 100) * runningTotal);
     record.name = dest["@_name"];
     record.value_msat = amount * 1000;
@@ -139,7 +144,7 @@ const getBaseRecord = ({
   satAmount,
   message,
   ts,
-  sender_name,
+  sender,
 }) => {
   let record = {
     podcast: channel?.title,
@@ -151,12 +156,12 @@ const getBaseRecord = ({
     episode: activeItem?.guid?.title,
     ts,
     action: "boost",
-    app_name: "LN Beats",
+    app_name: "BYOPP",
     value_msat: 0,
     value_msat_total: satAmount * 1000,
     name: undefined,
     message,
-    sender_name,
+    sender_name: sender,
   };
   return record;
 };

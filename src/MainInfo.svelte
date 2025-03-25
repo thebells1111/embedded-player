@@ -1,5 +1,4 @@
 <script>
-  import detectWebLNProvider from "./functions/detectWebLNProvider";
   import AudioProgressBar from "./AudioProgressBar.svelte";
   export let player;
   export let feed;
@@ -34,9 +33,9 @@
       alt={feed?.channel?.title || "Podcast"}
     />
 
-    <h3 part="main-info-channel-title">
+    <h2 part="main-info-channel-title">
       {feed?.channel?.title}
-    </h3>
+    </h2>
     <p part="main-info-channel-author">
       {feed?.channel?.author || feed?.channel?.["itunes:author"]}
     </p>

@@ -114,16 +114,6 @@
   }
 </script>
 
-<svelte:head>
-  {#if activeItem.title}
-    <title
-      >Playing:
-      {activeItem?.title} -
-      {feed?.channel?.author}</title
-    >
-  {/if}
-</svelte:head>
-
 <audio
   disableRemotePlayback
   playsinline

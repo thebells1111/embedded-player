@@ -19,7 +19,7 @@
           flipCardY();
         }}
       >
-        <span part="item-list-play-icon" class="material-icons">
+        <span part="item-list-play-button-icon" class="material-icons">
           {!isPaused && index === activeIndex ? "pause" : "play_arrow"}
         </span>
 

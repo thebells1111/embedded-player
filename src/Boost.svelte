@@ -8,8 +8,8 @@
   export let flipCardX = () => {};
 
   let satAmount = 100;
-  let senderName = "";
-  let message = "this is a test";
+  let sender = "dude";
+  let message = "the Dude abides";
 
   async function handleBoost() {
     if (!wallet) {
@@ -27,6 +27,7 @@
         player,
         satAmount,
         message,
+        sender,
       });
     }
   }
@@ -42,7 +43,7 @@
       <input
         id="boost-container-input-sender"
         part="boost-container-input-sender"
-        placeholder="sender name"
+        bind:value={sender}
       />
     </label>
     <label
@@ -53,7 +54,7 @@
       <input
         id="boost-container-input-amount"
         part="boost-container-input-amount"
-        placeholder="amount"
+        bind:value={satAmount}
       />
     </label>
     <label
@@ -64,7 +65,7 @@
       <textarea
         id="boost-container-input-message"
         part="boost-container-input-message"
-        placeholder="message"
+        bind:value={message}
       />
     </label>
   </div>
@@ -73,7 +74,7 @@
     <span part="boost-container-goto-player-button-icon"> smart_display </span>
   </button>
 
-  <button part="boost-container-boost-button" on:click={flipCardX}>
+  <button part="boost-container-boost-button" on:click={handleBoost}>
     <span
       class="material-icons outline"
       part="boost-container-boost-button-icon"

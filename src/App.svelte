@@ -167,7 +167,6 @@
     href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined"
     rel="stylesheet"
   />
-  <title>{feed?.channel?.title || "Podcast Player"}</title>
 </svelte:head>
 
 {#if isLoading}
@@ -242,6 +241,7 @@
   .flippable {
     height: 100%;
     overflow: hidden;
+    border-radius: 10px;
   }
 
   /* Loading and error states */
