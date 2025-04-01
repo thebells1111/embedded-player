@@ -19,17 +19,17 @@
 
     if (wallet && !wallet._isEnabled) {
       await window.webln.enable();
-
-      sendBoost({
-        wallet,
-        channel: feed?.channel,
-        activeItem,
-        player,
-        satAmount,
-        message,
-        sender,
-      });
     }
+
+    sendBoost({
+      wallet,
+      channel: feed?.channel,
+      activeItem,
+      player,
+      satAmount,
+      message,
+      sender,
+    });
   }
 </script>
 

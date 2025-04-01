@@ -47,95 +47,131 @@ export default async function sendBoost({
 
   let payments = [];
 
-  let { feesDestinations, splitsDestinations } = normalizeSplits(destinations);
-
-  for (const dest of feesDestinations) {
-    let feeRecord = filterEmptyKeys(
-      getBaseRecord({ channel, activeItem, satAmount, message, sender })
-    );
-
-    console.log(feeRecord);
-
-    let amount = Math.round((dest["@_split"] / 100) * satAmount);
-    if (amount > 0) {
-      runningTotal -= amount;
-      feeRecord.name = dest["@_name"];
-      feeRecord.value_msat = amount * 1000;
-
-      let customRecords = { 7629169: JSON.stringify(feeRecord) };
-
-      if (dest["@_customKey"]) {
-        customRecords[dest["@_customKey"]] = dest["@_customValue"];
-      }
-
-      try {
-        let record = {
-          destination: dest["@_address"],
-          amount: amount,
-          customRecords: customRecords,
-        };
-        console.log(record);
-        //   await wallet.keysend(record);
-      } catch (err) {
-        alert(`error with  ${dest["@_name"]}:  ${err.message}`);
-      }
-    }
-  }
-
-  for (const dest of splitsDestinations) {
-    let record = filterEmptyKeys(
-      getBaseRecord({ channel, activeItem, satAmount, message, sender })
-    );
-
-    console.log(record);
-    let amount = Math.round((dest["@_split"] / 100) * runningTotal);
-    record.name = dest["@_name"];
-    record.value_msat = amount * 1000;
-    if (amount >= 1) {
-      let customRecords = { 7629169: JSON.stringify(record) };
-      if (dest["@_customKey"]) {
-        customRecords[dest["@_customKey"]] = dest["@_customValue"];
-      }
-
-      try {
-        let record = {
-          destination: dest["@_address"],
-          amount: amount,
-          customRecords: customRecords,
-        };
-        console.log(record);
-        let res = await wallet.keysend(record);
-        console.log(res);
-      } catch (err) {
-        alert(`error with  ${dest["@_name"]}:  ${err.message}`);
-      }
-    }
-  }
-
-  console.log(payments);
+  await processDestinations({
+    destinations,
+    channel,
+    activeItem,
+    satAmount,
+    message,
+    sender,
+  });
 }
 
-function normalizeSplits(destinations) {
-  let feesDestinations = [];
-  let splitsDestinations = [];
+async function processDestinations({
+  destinations,
+  channel,
+  activeItem,
+  satAmount,
+  message,
+  sender,
+}) {
+  let runningTotal = satAmount;
+
+  // First, calculate total split percentage (only for non-fee destinations)
   let splitTotal = 0;
-  destinations.forEach((v) => {
-    if ((!v["@_fee"] || v["@_fee"] === false) && Number(v["@_split"])) {
-      splitTotal += Number(v["@_split"]);
-    }
-  });
-  destinations.forEach((v) => {
-    if (!v["@_fee"] || v["@_fee"] === false) {
-      if (Number(v["@_split"])) {
-        v["@_split"] = (Number(v["@_split"]) / splitTotal) * 100;
-      }
-      splitsDestinations.push(clone(v));
-    } else {
-      feesDestinations.push(clone(v));
+  destinations.forEach((dest) => {
+    if (
+      (!dest["@_fee"] || dest["@_fee"] === false) &&
+      Number(dest["@_split"])
+    ) {
+      splitTotal += Number(dest["@_split"]);
     }
   });
 
-  return { feesDestinations, splitsDestinations };
+  // Process fee destinations first
+  for (const dest of destinations) {
+    if (dest["@_fee"] === true) {
+      // Calculate fee amount with floor rounding
+      let amount = Math.floor((dest["@_split"] / 100) * satAmount);
+      if (amount <= 0) continue;
+
+      // Create and send payment
+      runningTotal = await processPayment({
+        dest,
+        amount,
+        runningTotal,
+        channel,
+        activeItem,
+        satAmount,
+        message,
+        sender,
+      });
+    }
+  }
+
+  // Then process split destinations
+  for (const dest of destinations) {
+    if (!dest["@_fee"] || dest["@_fee"] === false) {
+      if (dest?.["@_type"] === "node" || dest?.["@_type"] === "lnaddress") {
+        // Calculate normalized split amount with floor rounding
+        let normalizedSplit =
+          splitTotal > 0 ? (Number(dest["@_split"]) / splitTotal) * 100 : 0;
+        let amount = Math.floor((normalizedSplit / 100) * runningTotal);
+        if (amount < 1) continue;
+
+        // Create and send payment
+        await processPayment({
+          dest,
+          amount,
+          runningTotal,
+          channel,
+          activeItem,
+          satAmount,
+          message,
+          sender,
+        });
+      }
+    }
+  }
+
+  return runningTotal;
+}
+
+async function processPayment({
+  dest,
+  amount,
+  runningTotal,
+  channel,
+  activeItem,
+  satAmount,
+  message,
+  sender,
+}) {
+  // Create base record
+  let record = filterEmptyKeys(
+    getBaseRecord({ channel, activeItem, satAmount, message, sender })
+  );
+
+  // Set up record details
+  record.name = dest["@_name"];
+  record.value_msat = amount * 1000;
+
+  // Create customRecords object
+  let customRecords = { 7629169: JSON.stringify(record) };
+  if (dest["@_customKey"]) {
+    customRecords[dest["@_customKey"]] = dest["@_customValue"];
+  }
+
+  try {
+    let paymentRecord = {
+      destination: dest["@_address"],
+      amount: amount,
+      customRecords: customRecords,
+    };
+
+    console.log(paymentRecord);
+    // await wallet.keysend(paymentRecord);
+
+    // Update runningTotal only for fees
+    if (dest["@_fee"] === true) {
+      runningTotal -= amount;
+    }
+
+    return runningTotal;
+  } catch (err) {
+    alert(`error with ${dest["@_name"]}: ${err.message}`);
+    return runningTotal;
+  }
 }
 
 const getBaseRecord = ({
