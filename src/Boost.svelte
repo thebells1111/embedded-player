@@ -7,9 +7,9 @@
   let wallet;
   export let flipCardX = () => {};
 
-  let satAmount = 100;
-  let sender = "dude";
-  let message = "the Dude abides";
+  let satAmount = 110;
+  let sender = "StevenB";
+  let message = "The Dude Abides";
 
   async function handleBoost() {
     if (!wallet) {

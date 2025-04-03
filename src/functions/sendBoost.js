@@ -1,4 +1,5 @@
 import clone from "just-clone";
+import processDestinations from "./processDestinations";
 
 export default async function sendBoost({
   satAmount,
@@ -43,10 +44,6 @@ export default async function sendBoost({
     });
   }
 
-  let runningTotal = satAmount;
-
-  let payments = [];
-
   await processDestinations({
     destinations,
     channel,
@@ -54,159 +51,6 @@ export default async function sendBoost({
     satAmount,
     message,
     sender,
+    wallet,
   });
-}
-
-async function processDestinations({
-  destinations,
-  channel,
-  activeItem,
-  satAmount,
-  message,
-  sender,
-}) {
-  let runningTotal = satAmount;
-
-  // First, calculate total split percentage (only for non-fee destinations)
-  let splitTotal = 0;
-  destinations.forEach((dest) => {
-    if (
-      (!dest["@_fee"] || dest["@_fee"] === false) &&
-      Number(dest["@_split"])
-    ) {
-      splitTotal += Number(dest["@_split"]);
-    }
-  });
-
-  // Process fee destinations first
-  for (const dest of destinations) {
-    if (dest["@_fee"] === true) {
-      // Calculate fee amount with floor rounding
-      let amount = Math.floor((dest["@_split"] / 100) * satAmount);
-      if (amount <= 0) continue;
-
-      // Create and send payment
-      runningTotal = await processPayment({
-        dest,
-        amount,
-        runningTotal,
-        channel,
-        activeItem,
-        satAmount,
-        message,
-        sender,
-      });
-    }
-  }
-
-  // Then process split destinations
-  for (const dest of destinations) {
-    if (!dest["@_fee"] || dest["@_fee"] === false) {
-      if (dest?.["@_type"] === "node" || dest?.["@_type"] === "lnaddress") {
-        // Calculate normalized split amount with floor rounding
-        let normalizedSplit =
-          splitTotal > 0 ? (Number(dest["@_split"]) / splitTotal) * 100 : 0;
-        let amount = Math.floor((normalizedSplit / 100) * runningTotal);
-        if (amount < 1) continue;
-
-        // Create and send payment
-        await processPayment({
-          dest,
-          amount,
-          runningTotal,
-          channel,
-          activeItem,
-          satAmount,
-          message,
-          sender,
-        });
-      }
-    }
-  }
-
-  return runningTotal;
-}
-
-async function processPayment({
-  dest,
-  amount,
-  runningTotal,
-  channel,
-  activeItem,
-  satAmount,
-  message,
-  sender,
-}) {
-  // Create base record
-  let record = filterEmptyKeys(
-    getBaseRecord({ channel, activeItem, satAmount, message, sender })
-  );
-
-  // Set up record details
-  record.name = dest["@_name"];
-  record.value_msat = amount * 1000;
-
-  // Create customRecords object
-  let customRecords = { 7629169: JSON.stringify(record) };
-  if (dest["@_customKey"]) {
-    customRecords[dest["@_customKey"]] = dest["@_customValue"];
-  }
-
-  try {
-    let paymentRecord = {
-      destination: dest["@_address"],
-      amount: amount,
-      customRecords: customRecords,
-    };
-
-    console.log(paymentRecord);
-    // await wallet.keysend(paymentRecord);
-
-    // Update runningTotal only for fees
-    if (dest["@_fee"] === true) {
-      runningTotal -= amount;
-    }
-
-    return runningTotal;
-  } catch (err) {
-    alert(`error with ${dest["@_name"]}: ${err.message}`);
-    return runningTotal;
-  }
-}
-
-const getBaseRecord = ({
-  channel,
-  activeItem,
-  satAmount,
-  message,
-  ts,
-  sender,
-}) => {
-  let record = {
-    podcast: channel?.title,
-    guid: channel?.podcastGuid,
-    episode_guid:
-      activeItem?.guid?.["#text"] ||
-      activeItem?.guid?.guid ||
-      activeItem?.guid?.enclosure?.["@_url"],
-    episode: activeItem?.guid?.title,
-    ts,
-    action: "boost",
-    app_name: "BYOPP",
-    value_msat: 0,
-    value_msat_total: satAmount * 1000,
-    name: undefined,
-    message,
-    sender_name: sender,
-  };
-  return record;
-};
-
-function filterEmptyKeys(obj) {
-  return Object.entries(obj).reduce((acc, [key, value]) => {
-    if (value !== null && value !== undefined && value !== "") {
-      acc[key] = value;
-    }
-    return acc;
-  }, {});
 }
