@@ -44,6 +44,24 @@ export default async function sendBoost({
     });
   }
 
+  destinations.push({
+    "@_address": "johnscreekstudios@getalby.com",
+    "@_name": "Randy",
+    "@_split": "3",
+    "@_type": "lnaddress",
+    "@_fee": "true",
+  });
+
+  destinations.push({
+    "@_address": "sjb@strike.me",
+    "@_name": "StevenB Strike",
+    "@_split": "3",
+    "@_type": "lnaddress",
+    "@_fee": "true",
+  });
+
+  console.log(destinations);
+
   await processDestinations({
     destinations,
     channel,

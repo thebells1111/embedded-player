@@ -4,32 +4,41 @@
   export let player;
   export let feed;
   export let activeItem;
-  let wallet;
   export let flipCardX = () => {};
 
   let satAmount = 110;
   let sender = "StevenB";
   let message = "The Dude Abides";
 
+  let wallet = null;
+
+  let isEnablePoisoned = false;
+
   async function handleBoost() {
-    if (!wallet) {
-      wallet = await detectWebLNProvider();
-      console.log(wallet._isEnabled);
+    if (isEnablePoisoned) {
+      alert("Alby rejected permission. Reload the page to try again.");
+      return;
     }
 
-    if (wallet && !wallet._isEnabled) {
-      await window.webln.enable();
-    }
+    try {
+      if (!wallet) wallet = await detectWebLNProvider();
+      if (!wallet._isEnabled) await wallet.enable();
 
-    sendBoost({
-      wallet,
-      channel: feed?.channel,
-      activeItem,
-      player,
-      satAmount,
-      message,
-      sender,
-    });
+      sendBoost({
+        wallet,
+        channel: feed?.channel,
+        activeItem,
+        player,
+        satAmount,
+        message,
+        sender,
+      });
+    } catch (err) {
+      console.error("Boost failed:", err);
+      if (err.message.includes("enable")) {
+        isEnablePoisoned = true;
+      }
+    }
   }
 </script>
 
